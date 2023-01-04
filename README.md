@@ -17,4 +17,4 @@ https://taku910.github.io/mecab/#install
 2. kernel（python）を確認、適宜設定
 
 ### colabでの実行
-https://colab.research.google.com/?hl=ja にアクセスして、このリポジトリをインポートして実行してください。
+https://colab.research.google.com/?hl=ja にアクセスして、このリポジトリのURLを入力し、実行するnotebookを選択してください。
