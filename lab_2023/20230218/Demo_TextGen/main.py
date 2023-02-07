@@ -104,9 +104,19 @@ def generate_next(now_text, radio, max_length, num_beams, p):
         str: TextArea（今回生成した文を表示するコンポーネントで使用）
 
     Todo:
-        * 処理を実装
+        * generate_config, inputsを実装
     """
-    pass
+    generate_config = ...
+    # テキスト生成
+    inputs = ...
+    output = model.generate(inputs, generation_config=generate_config)
+    generated = tokenizer.decode(output[0], skip_special_tokens=True)
+    # 結果の整形処理
+    next_text = "。\n".join(generated.replace(" ", "").split("。"))
+    gen_text = next_text[len(now_text)+1:]  # 今回生成したテキストを抽出
+
+    return next_text, next_text, gen_text
+
 
 # 2. GradioによるUI/イベント処理の定義
 with gr.Blocks() as demo:
@@ -123,28 +133,36 @@ with gr.Blocks() as demo:
     with gr.Row():
         with gr.Column():
             input_text = ...  # テキストを入力するコンポーネント
-            max_length = ...  # テキストを入力するコンポーネント
-            num_beams = ...  # テキストを入力するコンポーネント
-            p = ...    # テキストを入力するコンポーネント
+            max_length = ...  # 数値を入力するコンポーネント.参考：（min=100, max=1000, step=100, default=100）
+            num_beams = ...  # 数値を入力するコンポーネント.参考：（min=1, max=10, step=1, default=6）
+            p = ...    # テキストを入力するコンポーネント.参考：（min=0, max=1, step=0.01, default=0.92）
             btn = gr.Button("Decode")
         
         with gr.Column():
-            out1 = ...  # Greedy decode output
-            out2 = ...  # Smapling decode output
-            out3 = ...  # Beam Search decode output
-            out4 = ...  # Top-p Sampling decode output
+            out1 = ...  # Greedy decode outputを表示するコンポーネント
+            out2 = ...  # Smapling decode outputを表示するコンポーネント
+            out3 = ...  # Beam Search decode outputを表示するコンポーネント
+            out4 = ...  # Top-p Sampling decode outputを表示するコンポーネント
 
-    with gr.Row():
-        pass  # レイアウト（gr.Column()の使い方）
-        pass  # 初回の結果としてout1を表示させる
-        pass  # どの結果を使うか、radioで選択できる
-
-        pass  # 生成した続きを、これまでの結果を含めて、表示する
-        pass  # どのデコード方法で、続きを生成するか、radioで選択する  
-        pass  # 生成した続きを、これまでの結果を含めずに、表示する
-    
     # 2.2 イベント処理
     btn.click(fn=generate, inputs=[input_text, max_length, num_beams, p], outputs=[out1, out2, out3, out4])
+
+
+    # 以下は課題２（取り組むときはコメントアウトを外してください）
+    # with gr.Row():
+    #     pass  # レイアウト（gr.Column()の使い方）
+    #     pass  # 初回の結果としてout1を表示させる
+    #     pass  # どの結果を使うか、radioで選択できる
+
+    #     pass  # 生成した続きを、これまでの結果を含めて、表示する
+    #     pass  # どのデコード方法で、続きを生成するか、radioで選択する  
+    #     pass  # 生成した続きを、これまでの結果を含めずに、表示する
+
+    # # 2.2 イベント処理
+    # btn.click(fn=generate, inputs=[input_text, max_length, num_beams, p], outputs=[out1, out2, out3, out4])
+    # pass  # out1が変化した時の処理
+    # pass  # radioが変化した時の処理
+    # pass  # 続きを生成する処理
 
 if __name__ == "__main__":
     demo.launch()

@@ -27,25 +27,9 @@ python main.py
 ## その１（対象：全員）
 ４パターンのデコード方法の結果を同時に出力するデモを実装してください。
 
-### Gradioのコンポーネントの実装
-main.pyの下記のコメントを参考に、必要な処理を実装してください。
-```python
-with gr.Row():
-    with gr.Column():
-        input_text = ...  # テキストを入力するコンポーネント
-        max_length = ...  # テキストを入力するコンポーネント
-        num_beams = ...  # テキストを入力するコンポーネント
-        p = ...    # テキストを入力するコンポーネント
-        btn = gr.Button("Decode")
-    
-    with gr.Column():P
-        out1 = ...  # Greedy decode output
-        out2 = ...  # Smapling decode output
-        out3 = ...  # Beam Search decode output
-        out4 = ...  # Top-p Sampling decode output
-```
 ### テキスト生成の関数generation()の実装
 main.pyの下記のコメントを参考に、必要な処理を実装してください。
+コメントのある箇所は全て実装が必要な箇所です。
 ```python
 def generate(text, max_length, num_beams, p):
     generate_config_list = [
@@ -79,6 +63,26 @@ def generate(text, max_length, num_beams, p):
         generated = ...  # tokenizerを使って、outputを単語に変換します。
         generated_texts.append("。\n".join(generated.replace(" ", "").split("。")))
     return tuple(generated_texts)
+```
+
+### Gradioのコンポーネントの実装
+main.pyの下記のコメントを参考に、必要な処理を実装してください。
+コメントのある箇所は全て実装が必要な箇所です。
+コンポーネントの引数は参考です。そのままで与えても動きません。
+```python
+with gr.Row():
+    with gr.Column():
+        input_text = ...  # テキストを入力するコンポーネント
+        max_length = ...  # 数値を入力するコンポーネント.参考：（min=100, max=1000, step=100, default=100）
+        num_beams = ...  # 数値を入力するコンポーネント.参考：（min=1, max=10, step=1, default=6）
+        p = ...    # テキストを入力するコンポーネント.参考：（min=0, max=1, step=0.01, default=0.92）
+        btn = gr.Button("Decode")
+    
+    with gr.Column():
+        out1 = ...  # Greedy decode outputを表示するコンポーネント
+        out2 = ...  # Smapling decode outputを表示するコンポーネント
+        out3 = ...  # Beam Search decode outputを表示するコンポーネント
+        out4 = ...  # Top-p Sampling decode outputを表示するコンポーネント
 ```
 
 ## その２（対象：その１が早めに終わった人）
