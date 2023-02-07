@@ -29,6 +29,7 @@ python main.py
 
 ### テキスト生成の関数generation()の実装
 main.pyの下記のコメントを参考に、必要な処理を実装してください。
+
 コメントのある箇所は全て実装が必要な箇所です。
 ```python
 def generate(text, max_length, num_beams, p):
@@ -67,8 +68,11 @@ def generate(text, max_length, num_beams, p):
 
 ### Gradioのコンポーネントの実装
 main.pyの下記のコメントを参考に、必要な処理を実装してください。
+
 コメントのある箇所は全て実装が必要な箇所です。
+
 コンポーネントの引数は参考です。そのままで与えても動きません。
+
 ```python
 with gr.Row():
     with gr.Column():
@@ -140,8 +144,17 @@ def generate_next(now_text, radio, max_length, num_beams, p):
         str: TextArea（今回生成した文を表示するコンポーネントで使用）
 
     Todo:
-        * 処理を実装
+        * generate_config, inputsを実装
     """
-    pass
+    generate_config = ...
+    # テキスト生成
+    inputs = ...
+    output = model.generate(inputs, generation_config=generate_config)
+    generated = tokenizer.decode(output[0], skip_special_tokens=True)
+    # 結果の整形処理
+    next_text = "。\n".join(generated.replace(" ", "").split("。"))
+    gen_text = next_text[len(now_text)+1:]  # 今回生成したテキストを抽出
+
+    return next_text, next_text, gen_text
 ```
 
