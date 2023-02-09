@@ -32,7 +32,30 @@ main.pyの下記のコメントを参考に、必要な処理を実装してく�
 
 コメントのある箇所は全て実装が必要な箇所です。
 ```python
+# 1. Gradioのコンポーネントのイベント処理用の関数の定義
 def generate(text, max_length, num_beams, p):
+    """初回のテキスト生成
+
+    テキスト生成を行うが、デコード方法によって異なる結果になることを示すための処理を行う。
+    指定されたパラメタを使って、異なる４つデコード方法を同時に出力する。
+
+    Args:
+        text: str
+            Stateから取得（続きを生成するためのプロンプト）
+        max_length: int
+            Sliderから取得（全てのデコード方法に共通のパラメタ。生成する単語数）
+        num_beams: int
+            Sliderから取得（Beam Searchのパラメタ）
+        p: int
+            Sliderから取得（Top-p Samplingのパラメタ）
+    
+    Returns:
+        tuple(str1, str2, str3)
+            str1: State（生成結果を入出力の状態に反映）
+            str2: TextArea（全文表示用のコンポーネントで使用）
+            str3: TextArea（今回生成した文を表示するコンポーネントで使用）
+    """
+    # テキスト生成用のconfigクラスを使って、４パターンの設定を定義する。
     generate_config_list = [
         GenerationConfig(
             max_new_tokens=max_length,
@@ -62,7 +85,14 @@ def generate(text, max_length, num_beams, p):
         output = ...  # modelを使ってテキスト生成を行います。
 
         generated = ...  # tokenizerを使って、outputを単語に変換します。
+
+        # 読みやすくさの処理を行なって、リストに追加
         generated_texts.append("。\n".join(generated.replace(" ", "").split("。")))
+
+    # gradioはtupleを想定している。
+    # これと同じ処理：return generated_texts[0], generated_texts[1], generated_texts[2]
+    # pythonのタプルは「,」によって生成される。丸括弧は省略可能。
+    # 参考：https://note.nkmk.me/python-function-return-multiple-values/
     return tuple(generated_texts)
 ```
 
@@ -83,6 +113,7 @@ with gr.Row():
         btn = gr.Button("Decode")
     
     with gr.Column():
+        # btn.clickのoutputsに対応するテキストコンポーネントをそれぞれ設定する
         out1 = ...  # Greedy decode outputを表示するコンポーネント
         out2 = ...  # Smapling decode outputを表示するコンポーネント
         out3 = ...  # Beam Search decode outputを表示するコンポーネント
@@ -132,16 +163,24 @@ def generate_next(now_text, radio, max_length, num_beams, p):
     デコード方法を指定することができるが、そのパラメタは初回のテキスト生成と同じになる。
 
     Args:
-        str: Stateから取得（続きを生成するためのプロンプト）
-        str: Radioから取得（使用するデコード方法の名前）
-        int: Sliderから取得（初回のテキスト生成で使用した値をここでも使用）
-        int: Sliderから取得（初回のテキスト生成で使用した値をここでも使用）
-        int: Sliderから取得（初回のテキスト生成で使用した値をここでも使用）
+        now_text: str
+            Stateから取得（続きを生成するためのプロンプト）
+        radio: str
+            Radioから取得（使用するデコード方法の名前）
+        max_length: int
+            Sliderから取得（初回のテキスト生成で使用した値をここでも使用）
+        num_beams: int
+            Sliderから取得（初回のテキスト生成で使用した値をここでも使用）
+        p: int
+            Sliderから取得（初回のテキスト生成で使用した値をここでも使用）
     
     Returns:
-        str: State（生成結果を入出力の状態に反映）
-        str: TextArea（全文表示用のコンポーネントで使用）
-        str: TextArea（今回生成した文を表示するコンポーネントで使用）
+        next_text: str
+            State（生成結果を入出力の状態に反映）
+        next_text: str
+            TextArea（全文表示用のコンポーネントで使用）
+        gen_text: str
+            TextArea（今回生成した文を表示するコンポーネントで使用）
 
     Todo:
         * generate_config, inputsを実装

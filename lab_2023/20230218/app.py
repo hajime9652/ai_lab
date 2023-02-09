@@ -17,15 +17,20 @@ def generate(text, max_length, num_beams, p):
     指定されたパラメタを使って、異なる４つデコード方法を同時に出力する。
 
     Args:
-        str: Stateから取得（続きを生成するためのプロンプト）
-        int: Sliderから取得（全てのデコード方法に共通のパラメタ。生成する単語数）
-        int: Sliderから取得（Beam Searchのパラメタ）
-        int: Sliderから取得（Top-p Samplingのパラメタ）
+        text: str
+            Stateから取得（続きを生成するためのプロンプト）
+        max_length: int
+            Sliderから取得（全てのデコード方法に共通のパラメタ。生成する単語数）
+        num_beams: int
+            Sliderから取得（Beam Searchのパラメタ）
+        p: int
+            Sliderから取得（Top-p Samplingのパラメタ）
     
     Returns:
-        str: State（生成結果を入出力の状態に反映）
-        str: TextArea（全文表示用のコンポーネントで使用）
-        str: TextArea（今回生成した文を表示するコンポーネントで使用）
+        tuple(str1, str2, str3)
+            str1: State（生成結果を入出力の状態に反映）
+            str2: TextArea（全文表示用のコンポーネントで使用）
+            str3: TextArea（今回生成した文を表示するコンポーネントで使用）
     """
     # テキスト生成用のconfigクラスを使って、４パターンの設定を定義する。
     generate_config_list = [
@@ -93,16 +98,24 @@ def generate_next(now_text, radio, max_length, num_beams, p):
     デコード方法を指定することができるが、そのパラメタは初回のテキスト生成と同じになる。
 
     Args:
-        str: Stateから取得（続きを生成するためのプロンプト）
-        str: Radioから取得（使用するデコード方法の名前）
-        int: Sliderから取得（初回のテキスト生成で使用した値をここでも使用）
-        int: Sliderから取得（初回のテキスト生成で使用した値をここでも使用）
-        int: Sliderから取得（初回のテキスト生成で使用した値をここでも使用）
+        now_text: str
+            Stateから取得（続きを生成するためのプロンプト）
+        radio: str
+            Radioから取得（使用するデコード方法の名前）
+        max_length: int
+            Sliderから取得（初回のテキスト生成で使用した値をここでも使用）
+        num_beams: int
+            Sliderから取得（初回のテキスト生成で使用した値をここでも使用）
+        p: int
+            Sliderから取得（初回のテキスト生成で使用した値をここでも使用）
     
     Returns:
-        str: State（生成結果を入出力の状態に反映）
-        str: TextArea（全文表示用のコンポーネントで使用）
-        str: TextArea（今回生成した文を表示するコンポーネントで使用）
+        next_text: str
+            State（生成結果を入出力の状態に反映）
+        next_text: str
+            TextArea（全文表示用のコンポーネントで使用）
+        gen_text: str
+            TextArea（今回生成した文を表示するコンポーネントで使用）
     """
     # デコード方法の指定に合わせて、cofingを定義
     if radio == "1.Greedy":
