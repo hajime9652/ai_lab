@@ -139,6 +139,7 @@ with gr.Blocks() as demo:
             btn = gr.Button("Decode")
         
         with gr.Column():
+            # btn.clickのoutputsに対応するテキストコンポーネントをそれぞれ設定する
             out1 = ...  # Greedy decode outputを表示するコンポーネント
             out2 = ...  # Smapling decode outputを表示するコンポーネント
             out3 = ...  # Beam Search decode outputを表示するコンポーネント
